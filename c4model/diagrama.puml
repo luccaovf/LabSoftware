@@ -1,0 +1,27 @@
+@startuml Diagrama Solução BackEnd
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!include DEVICONS/database.puml
+
+LAYOUT_TOP_DOWN()
+
+System_Boundary(toDo, "ToDo List BackEnd Application") {
+LAYOUT_TOP_DOWN()
+    Container(entity, "Entity", "Entidades usadas pela aplicação")
+    Container(repository, "Repository", "Responsavel pela comunicação com o banco de dados")
+    Container(service, "Service", "Camada de Regra de negócios")
+    Container(controller, "Controller", "Fornece EndPoints da aplicação")
+}
+
+ContainerDb(db, "Banco de Dados", "H2", "Armazena os dados", $sprite="database")
+
+Rel(repository, service, "TaskRepository")
+Rel(service, controller, "TaskService")
+Rel_L(entity, service, "Task")
+Rel_L(entity, repository, "Task")
+Rel_L(entity, controller, "Task")
+
+Rel_L(repository, db, "SQL Script")
+
+@enduml
