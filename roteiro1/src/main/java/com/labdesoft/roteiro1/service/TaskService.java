@@ -1,12 +1,14 @@
 package com.labdesoft.roteiro1.service;
 
 import com.labdesoft.roteiro1.entity.Task;
+import com.labdesoft.roteiro1.enums.TaskType;
 import com.labdesoft.roteiro1.repository.TaskRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -21,6 +23,29 @@ public class TaskService {
     public Task create (@NotNull Task task) {
         task.setId(null);
         task.setCompleted(false);
+
+        if (task.getType().equals(TaskType.LIVRE)){
+            task.setDeadlineDays(null);
+            task.setDate(null);
+        } else if (task.getType().equals(TaskType.DATA)) {
+            if (task.getDate() == null){
+                throw new IllegalArgumentException("Tarefas do tipo data tem que ter uma data");
+            }
+            if (task.getDate().isBefore(LocalDate.now())) {
+                throw new IllegalArgumentException("Data invalida!");
+            }
+            task.setDeadlineDays(null);
+        }
+        else if (task.getType().equals(TaskType.PRAZO)) {
+            if (task.getDeadlineDays() == null || task.getDeadlineDays() < 0){
+                throw new IllegalArgumentException("Tarefas do tipo prazo tem que um prazo valido");
+            }
+            task.setDate(null);
+        }
+
+
+        task.setCreationDate(LocalDate.now());
+
         return this.taskRepository.save(task);
     }
 
