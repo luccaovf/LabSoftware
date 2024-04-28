@@ -46,6 +46,8 @@ public class Task {
 
     private LocalDate creationDate;
 
+    private String status;
+
     public Task(String description){
         this.description = description;
     }

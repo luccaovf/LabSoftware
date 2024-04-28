@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -27,6 +28,7 @@ public class TaskService {
         if (task.getType().equals(TaskType.LIVRE)){
             task.setDeadlineDays(null);
             task.setDate(null);
+
         } else if (task.getType().equals(TaskType.DATA)) {
             if (task.getDate() == null){
                 throw new IllegalArgumentException("Tarefas do tipo data tem que ter uma data");
@@ -55,6 +57,8 @@ public class TaskService {
         if (tasks.isEmpty()){
             throw new NoSuchElementException("Não há task no momento!");
         }
+
+        tasks.forEach(this::updateStatus);
         return  tasks;
     }
 
@@ -67,5 +71,32 @@ public class TaskService {
     public Task findById(@NotNull long id) {
         return this.taskRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(format("Task não encontrada, id: %s", id)));
+    }
+
+    private void updateStatus(@NotNull Task task){
+        String statusString;
+        if (task.getCompleted())
+            statusString = "Concluida";
+        else {
+            statusString = "Prevista";
+            if (task.getType().equals(TaskType.DATA)) {
+                if (task.getDate().isBefore(LocalDate.now())) {
+                    Period period = Period.between(task.getDate(), LocalDate.now());
+                    statusString = period.getDays() + " dias de atraso";
+                }
+            } else if (task.getType().equals(TaskType.PRAZO)) {
+                int daysUntilDeadLine = daysUntilDeadline(task);
+                if (daysUntilDeadLine < 0)
+                    statusString = -daysUntilDeadLine + " dias de atraso";
+            }
+        }
+
+        task.setStatus(statusString);
+    }
+
+    private int daysUntilDeadline (Task task){
+        Period period = Period.between(task.getCreationDate(), LocalDate.now());
+
+        return task.getDeadlineDays() - period.getDays();
     }
 }
