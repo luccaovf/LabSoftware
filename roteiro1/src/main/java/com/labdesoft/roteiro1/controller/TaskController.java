@@ -33,14 +33,28 @@ public class TaskController {
         }
     }
 
+    @GetMapping("/task/{id}")
+    @Operation(summary = "Pega uma tarefa da lista")
+    public ResponseEntity<Task> findOne(@PathVariable Long id){
+        try{
+            Task task = this.taskService.findById(id);
+
+            return new ResponseEntity<>(task, HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
     @PostMapping("/task")
     @Operation(summary = "Adicionar uma nova task")
-    public ResponseEntity<Void> create(@Valid @RequestBody Task task){
+    public ResponseEntity<Task> create(@Valid @RequestBody Task task){
         try{
-            this.taskService.create(task);
+            Task taskCreated = this.taskService.create(task);
 
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(taskCreated, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (Exception e) {

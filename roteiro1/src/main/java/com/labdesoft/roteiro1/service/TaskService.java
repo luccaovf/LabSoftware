@@ -69,8 +69,10 @@ public class TaskService {
     }
 
     public Task findById(@NotNull long id) {
-        return this.taskRepository.findById(id)
+        Task task = this.taskRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(format("Task não encontrada, id: %s", id)));
+        updateStatus(task);
+        return task;
     }
 
     private void updateStatus(@NotNull Task task){
