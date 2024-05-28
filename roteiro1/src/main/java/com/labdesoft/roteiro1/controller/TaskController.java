@@ -64,11 +64,11 @@ public class TaskController {
 
     @PutMapping("/task/{id}")
     @Operation(summary = "Conclui uma nova task")
-    public ResponseEntity<Void> update(@PathVariable Long id){
+    public ResponseEntity<Task> update(@PathVariable Long id){
         try{
-            this.taskService.conclude(id);
+            Task task = this.taskService.conclude(id);
 
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(task, HttpStatus.OK);
         } catch (EntityNotFoundException e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

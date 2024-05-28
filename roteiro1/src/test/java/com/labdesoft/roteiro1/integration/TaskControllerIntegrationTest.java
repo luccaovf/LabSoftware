@@ -58,4 +58,11 @@ public class TaskControllerIntegrationTest {
         get("/api/task/1").then().statusCode(200)
                 .assertThat().body("description", equalTo("Nova tarefa"));
     }
+
+    @Test
+    @Order(4)
+    public void givenUrl_whenSuccessOnGetsResponseAndJsonHasCompletedTask_thenCorrect() {
+        put("/api/task/1").then().statusCode(200)
+                .assertThat().body("completed", equalTo(true));
+    }
 }
