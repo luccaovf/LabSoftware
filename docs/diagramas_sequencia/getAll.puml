@@ -23,6 +23,6 @@ deactivate TaskService
 TaskController --> SpringBoot: ResponseEntity<List<Task>>
 deactivate TaskController
 end
-SpringBoot --> Frontend : ResponseEntity<Task> ResponseEntity.ok(resource)
+SpringBoot --> Frontend : ResponseEntity<List<Task>> ResponseEntity.ok(resource)
 Frontend --> User: <list>Task
 @enduml
