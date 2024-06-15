@@ -1,0 +1,28 @@
+@startuml
+actor User
+Boundary Frontend
+Boundary SpringBoot
+Control TaskController
+Participant TaskService
+Participant TaskRepository
+User -> Frontend: Listar todas as tarefas
+activate Frontend
+Frontend -> SpringBoot: GET api/task
+group Roteiro1Application [Spring Boot Java Application]
+activate SpringBoot
+SpringBoot -> TaskController: listAll()
+activate TaskController
+TaskController -> TaskService: listAll()
+activate TaskService
+TaskService -> TaskRepository: findAll()
+activate TaskRepository
+TaskRepository --> TaskService: List<Task>
+deactivate TaskRepository
+TaskService --> TaskController: List<Task>
+deactivate TaskService
+TaskController --> SpringBoot: ResponseEntity<List<Task>>
+deactivate TaskController
+end
+SpringBoot --> Frontend : ResponseEntity<Task> ResponseEntity.ok(resource)
+Frontend --> User: <list>Task
+@enduml
