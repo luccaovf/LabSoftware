@@ -1,0 +1,29 @@
+@startuml
+actor User
+Boundary Frontend
+Boundary SpringBoot
+Control TaskController
+Participant TaskService
+Participant TaskRepository
+User -> Frontend: Encontrar uma task
+activate Frontend
+Frontend -> SpringBoot: GET api/task/{id}
+group Roteiro1Application [Spring Boot Java Application]
+activate SpringBoot
+SpringBoot -> TaskController: findOne(id)
+activate TaskController
+TaskController -> TaskService: findById(id)
+activate TaskService
+TaskService -> TaskRepository: findById(id)
+activate TaskRepository
+TaskRepository --> TaskService: Task
+deactivate TaskRepository
+TaskService -> TaskService: updateStatus(Task)
+TaskService --> TaskController: Task
+deactivate TaskService
+TaskController --> SpringBoot: ResponseEntity<Task>
+deactivate TaskController
+end
+SpringBoot --> Frontend : ResponseEntity<Task> ResponseEntity.ok(resource)
+Frontend --> User: Task
+@enduml
