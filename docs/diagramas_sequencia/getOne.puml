@@ -19,6 +19,8 @@ activate TaskRepository
 TaskRepository --> TaskService: Task
 deactivate TaskRepository
 TaskService -> TaskService: updateStatus(Task)
+activate TaskService
+deactivate TaskService
 TaskService --> TaskController: Task
 deactivate TaskService
 TaskController --> SpringBoot: ResponseEntity<Task>
