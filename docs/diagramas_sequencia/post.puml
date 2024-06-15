@@ -1,0 +1,26 @@
+@startuml
+actor User
+Boundary Frontend
+Boundary SpringBoot
+Control TaskController
+Participant TaskService
+Participant TaskRepository
+User -> Frontend: Criar nova task
+activate Frontend
+Frontend -> SpringBoot: POST api/task
+group Roteiro1Application [Spring Boot Java Application]
+activate SpringBoot
+SpringBoot -> TaskController: create(task)
+activate TaskController
+TaskController -> TaskService: create(task)
+activate TaskService
+TaskService -> TaskRepository: save(task)
+activate TaskRepository
+TaskRepository --> TaskService: Task
+deactivate TaskRepository
+TaskService --> TaskController: Task
+deactivate TaskService
+TaskController --> SpringBoot: ResponseEntity<Task>
+deactivate TaskController
+end
+SpringBoo
