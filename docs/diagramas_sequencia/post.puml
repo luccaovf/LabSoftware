@@ -23,4 +23,6 @@ deactivate TaskService
 TaskController --> SpringBoot: ResponseEntity<Task>
 deactivate TaskController
 end
-SpringBoo
+SpringBoot --> Frontend : ResponseEntity<Task> ResponseEntity.created(resource)
+Frontend --> User: Task
+@enduml
