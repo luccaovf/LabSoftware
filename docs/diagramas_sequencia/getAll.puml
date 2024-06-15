@@ -18,6 +18,9 @@ TaskService -> TaskRepository: findAll()
 activate TaskRepository
 TaskRepository --> TaskService: List<Task>
 deactivate TaskRepository
+TaskService -> TaskService: [for each in List<Task>] updateStatus(task)
+activate TaskService
+deactivate TaskService
 TaskService --> TaskController: List<Task>
 deactivate TaskService
 TaskController --> SpringBoot: ResponseEntity<List<Task>>
