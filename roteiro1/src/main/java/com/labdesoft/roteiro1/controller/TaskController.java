@@ -15,6 +15,7 @@ import java.util.NoSuchElementException;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin("*")
 public class TaskController {
 
     private final TaskService taskService;
